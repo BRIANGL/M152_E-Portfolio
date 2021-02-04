@@ -37,11 +37,13 @@ $types = array('image');
 
 // si on souhaite envoyer quelque chose...
 if ($btn == 'send') {
+    DBConnection::startTransaction();
     $id = postDAO::add_post($comment);
 
     foreach ($_FILES['media']['size'] as $key => $value) {
         if ($value > $MAX_FILE_SIZE) {
             $error = 'File too heavy.';
+            DBConnection::rollback();
         } else {
             $size_total += $value;
         }
@@ -52,6 +54,7 @@ if ($btn == 'send') {
             $errorimg = $_FILES['media']["error"][$i];
             if ($error == 'File too heavy.' || $size_total > $MAX_POST_SIZE) {
                 $error = "Fichier trop volumineux!";
+                DBConnection::rollback();
             } else {
                 $separator = '/';
                 $extension = explode($separator, mime_content_type($_FILES['media']['tmp_name'][$i]))[1];
@@ -59,22 +62,28 @@ if ($btn == 'send') {
 
                 if (!in_array($type, $types)) {
                     $error = "erreur dans le type de fichier";
-                }
-                if ($error != "erreur dans le type de fichier") {
-                    if ($errorimg[0] == 0) {
-                        //echo "upload reussi";
-                        $tmp_name = $_FILES['media']["name"][$i];
-                        $name = explode(".", $tmp_name);
-                        $name = $name[0] . uniqid() . "." . $name[1];
-                        move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name);
-                        //ajout du nom du fichier dans la bd
-                        mediaDAO::changePath($name, $tmp_name[$i]);
-                        $lienimg = $default_dir . $type . "/" . $name;
-                    }
-                    try {
-                        mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
-                    } catch (\Throwable $th) {
-                        $error = $th;
+                    DBConnection::rollback();
+                } else {
+                    if ($error != "erreur dans le type de fichier") {
+                        if ($errorimg[0] == 0) {
+                            //echo "upload reussi";
+                            $tmp_name = $_FILES['media']["name"][$i];
+                            $name = explode(".", $tmp_name);
+                            $name = $name[0] . uniqid() . "." . $name[1];
+                            move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name);
+                            //ajout du nom du fichier dans la bd
+                            mediaDAO::changePath($name, $tmp_name[$i]);
+                            $lienimg = $default_dir . $type . "/" . $name;
+                        }
+                        try {
+                            mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
+                            DBConnection::commit();
+                        } catch (\Throwable $th) {
+                            $error = $th;
+                            DBConnection::rollback();
+                        }
+                    } else {
+                        DBConnection::rollback();
                     }
                 }
             }
@@ -87,5 +96,5 @@ if ($btn == 'send') {
 if (empty($error)) {
     $msg = '<div class="alert alert-success" role="alert">Upload effectué avec succès!</div>';
 } else {
-    $msg = '<div class="alert alert-danger" role="alert">'.$error.'</div>';
+    $msg = '<div class="alert alert-danger" role="alert">' . $error . '</div>';
 }

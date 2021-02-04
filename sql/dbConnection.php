@@ -53,8 +53,11 @@ class DBConnection
 
     public static function rollback()
     {
-        //DBConnection::getConnection()->rollback();
-        echo 'rollback';
+        try {
+            DBConnection::getConnection()->rollback();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function commit()
