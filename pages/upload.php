@@ -22,6 +22,6 @@ require_once("./controllers/upload_controllerV2.php");
 </head>
 <body>
     <?php echo $msg; ?>
-    <?= (isset($error)) ? '<div class="alert alert-danger" role="alert">'.$error.'</div>' : ''; ?>
+    <a href="index.php?page=homepage">Retour a l'acceuil</a>
 </body>
 </html>

@@ -68,7 +68,7 @@ if ($btn == 'send') {
                     $extension = explode($separator, mime_content_type($_FILES['media']['tmp_name'][$i]))[1];
                     // case 0 pour avoir le type
                     // récupère l'extension du fichier en imitant son contenu
-                    $type = explode($separator, mime_content_type($_FILES['media']['tmp_name'][$i]))[0];;
+                    $type = explode($separator, mime_content_type($_FILES['media']['tmp_name'][$i]))[0];
 
                     $local_path .= $type . '/';
                     $full_filename = $_FILES['media']['tmp_name'][$i];
