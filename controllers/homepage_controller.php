@@ -27,7 +27,7 @@ function display()
     $extensions = array(
         "image" => array('.png', '.gif', '.jpg', '.jpeg'),
         "video" => array('.mp4', '.webm'),
-        "audio" => array('.mp3', 'wav', 'ogg')
+        "audio" => array('.mp3', 'wav', 'ogg', 'mpeg')
     );
 
     foreach ($data as $num) {
@@ -106,7 +106,7 @@ function displayPost()
     $extensions = array(
         "image" => array('png', 'gif', 'jpg', 'jpeg'),
         "video" => array('mp4', 'webm'),
-        "audio" => array('mp3', 'wav', 'ogg', 'x-wav')
+        "audio" => array('mp3', 'wav', 'ogg', 'x-wav', 'mpeg')
     );
     foreach ($data as $num) {
         $display .= '<div class="panel panel-default">';
@@ -139,7 +139,7 @@ function displayPost()
                                             </li><p><strong>Note: </strong>The video tag is not supported in Internet Explorer 8 and earlier versions.</p></li>';
                                         } else if (in_array($tmp_ext, $extensions['audio'])) {
                                             # audio
-                                            $display .= '<li><audio controls preload="metadata">
+                                            $display .= '<audio controls preload="metadata">
                                             <source src="./' . $tmp_path . '" type="audio/' . $tmp_ext . '">
                                             Your browser does not support the audio element.
                                             </audio></li>';

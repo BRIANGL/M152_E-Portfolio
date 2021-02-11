@@ -31,10 +31,11 @@ $actualType = "";
 
 $extensions = array(
     "image" => array('.png', '.gif', '.jpg', '.jpeg'),
-    "video" => array('.mp4', '.webm')
+    "video" => array('.mp4', '.webm'),
+    "audio" => array('.mp3', 'wav', 'ogg')
 );
 // available types of file
-$types = array('image', 'video');
+$types = array('image', 'video', 'audio');
 
 // si on souhaite envoyer quelque chose...
 if ($btn == 'send') {
