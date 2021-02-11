@@ -132,11 +132,11 @@ function displayPost()
                                             $display .= "<div class='panel-thumbnail'><img name='" . $tmp_name . "' src='" . $tmp_path . "' class='img-responsive'></div>";
                                         } else if (in_array($tmp_ext, $extensions['video'])) {
                                             # video
-                                            $display .= '<video preload="metadata" width="320" height="240" controls loop>
+                                            $display .= '<video preload="metadata" width="100%" controls autoplay loop>
                                                 <source src="./' . $tmp_path . '" type="video/mp4">
                                                 Your browser does not support the video tag.
                                                 </video>
-                                            <li><p><strong>Note: </strong>The video tag is not supported in Internet Explorer 8 and earlier versions.</p></li>';
+                                            </li><p><strong>Note: </strong>The video tag is not supported in Internet Explorer 8 and earlier versions.</p></li>';
                                         } else if (in_array($tmp_ext, $extensions['audio'])) {
                                             # audio
                                             $display .= '<li><audio controls preload="metadata">

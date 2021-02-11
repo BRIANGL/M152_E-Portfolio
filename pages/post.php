@@ -41,7 +41,7 @@ require_once("./controllers/post_controller.php");
                         <ul class="list-inline">
                             <!-- Image tag -->
                             <li>
-                                <input type="file" files name="media[]" multiple accept=".png, .gif, .jpg, .jpeg">(.gif,.png,.jpeg,.jpg only)
+                                <input type="file" files name="media[]" multiple accept=".png, .gif, .jpg, .jpeg, .mp4, .webm">(.gif,.png,.jpeg,.jpg,.mp4,.webm only)
                             </li>
                             <li><div class="preview"><p>No files currently selected for upload<p></div></li>
                         </ul>

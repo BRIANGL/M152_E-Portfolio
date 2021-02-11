@@ -30,10 +30,11 @@ $MAX_POST_SIZE = 73400320;  // 70MB in bytes
 $actualType = "";
 
 $extensions = array(
-    "image" => array('.png', '.gif', '.jpg', '.jpeg')
+    "image" => array('.png', '.gif', '.jpg', '.jpeg'),
+    "video" => array('.mp4', '.webm')
 );
 // available types of file
-$types = array('image');
+$types = array('image', 'video');
 
 // si on souhaite envoyer quelque chose...
 if ($btn == 'send') {

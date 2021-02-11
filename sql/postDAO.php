@@ -33,7 +33,7 @@ class postDAO
     #region Read
     public static function readAll_post()
     {
-        $sql = "SELECT `idPost`, `commentaire`, `dateCreation`, `dateModification` FROM `post`";
+        $sql = "SELECT `idPost`, `commentaire`, `dateCreation`, `dateModification` FROM `post` ORDER BY `dateCreation` desc";
 
         $query = DBConnection::getConnection()->prepare($sql);
 
