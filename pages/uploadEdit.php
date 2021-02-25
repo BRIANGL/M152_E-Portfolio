@@ -5,7 +5,7 @@
  *  Date    :   2021/01/28
  *  Desc.   :   check page of the uploaded file
 */
-require_once("./controllers/upload_controller.php");
+require_once("./controllers/uploadEdit_controller.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">

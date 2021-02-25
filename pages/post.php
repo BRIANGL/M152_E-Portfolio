@@ -75,6 +75,7 @@ require_once("./controllers/post_controller.php");
   	    </div>
     </div>
 <!-- Code pour le Javascript --->
+<script src="./assets/js/jquery.js"></script>
 <script type="text/javascript">
 
     // modal

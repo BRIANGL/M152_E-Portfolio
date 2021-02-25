@@ -18,11 +18,11 @@ class MediaDAO
     /**
      * Function to add media
      *
-     * @param [type] $type
-     * @param [type] $name
-     * @param [type] $thxt
-     * @param [type] $path
-     * @param [type] $id
+     * @param [string] $type
+     * @param [string] $name
+     * @param [string] $thxt
+     * @param [string] $path
+     * @param [string] $id
      * @return void
      */
     public static function add_media($type, $name, $thxt, $path, $id)
@@ -122,6 +122,18 @@ class MediaDAO
         }
     }
 
+    public static function readMediaByIdPost($idPost)
+    {
+        $sql = "SELECT * FROM `media` WHERE `idPost` = :id ORDER BY `dateCreation` desc";
+
+        $query = DBConnection::getConnection()->prepare($sql);
+
+        $query->execute([
+            ':id' => $idPost,
+        ]);
+        return $query->fetchall();
+    }
+
     public static function read_media_by_name($name)
     {
         try {
@@ -199,22 +211,36 @@ class MediaDAO
 
     #endregion
     #region Delete
-    public static function del_media($idMedia)
+    public static function del_media($idPost)
     {
-        try {
-            $sql = "DELETE FROM `media` WHERE `id` = ':id';";
-            $data = array(':id' => $idMedia);
-            $db =  DBConnection::getConnection();
-            $db->beginTransaction();
-            $query = $db->prepare($sql);
-            $query->execute($data);
-            $db->commit();
-            return $query->fetchAll();
-        } catch (\Throwable $th) {
-            $th->getMessage();
-            $db->rollBack();
-            return FALSE;
-        }
+        $db = DBConnection::getConnection();
+        $sql = "DELETE FROM `media` WHERE `media`.`idPost` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ':id' => $idPost,
+        ]);
+    }
+
+    public static function del_mediaByIdMedia($idMedia)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "DELETE FROM `media` WHERE `media`.`idMedia` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ':id' => $idMedia,
+        ]);
+    }
+
+    public static function readMediaLinkById($idPost)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "SELECT `pathImg` FROM `media` WHERE `media`.`idPost` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ':id' => $idPost,
+        ]);
+        $result = $q->fetchAll();
+        return $result;
     }
     #endregion
 }

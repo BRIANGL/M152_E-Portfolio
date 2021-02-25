@@ -1,6 +1,6 @@
 <?php
 /*
-FICHIER CONTENANT TOUTES LES MÉTHODES EN RAPPORT AVEC LA TABLE "Media"
+FICHIER CONTENANT TOUTES LES MÉTHODES EN RAPPORT AVEC LA TABLE "Post"
 */
 
 namespace M152\sql;
@@ -41,6 +41,18 @@ class postDAO
         return $query->fetchall();
     }
 
+    public static function readpostById($idPost)
+    {
+        $sql = "SELECT `idPost`, `commentaire`, `dateCreation`, `dateModification` FROM `post` WHERE `idPost` = :id ORDER BY `dateCreation` desc";
+
+        $query = DBConnection::getConnection()->prepare($sql);
+
+        $query->execute([
+            ':id' => $idPost,
+        ]);
+        return $query->fetchall();
+    }
+
     public static function readByDate_post($date)
     {
         $sql = "SELECT `idPost` FROM `post` WHERE `dateCreation` = :date;";
@@ -53,34 +65,26 @@ class postDAO
     #region Update
     public static function updateById_post($id, $comment)
     {
-        try {
-            $date = date(">-m-d H:i:s");
-            $sql = "UPDATE `m152`.`post` SET `commentaire`=:comment, `dateModification`=:date WHERE `idPost` = :id";
-            $db = DBConnection::getConnection();
-            $query = $db->prepare($sql);
-            $data = array(":id" => $id, ":date" => $date, ":comment" => $comment);
-            $query->execute($data);
-        } catch (\Throwable $th) {
-            $th->getMessage();
-            return FALSE;
-        }
-        return TRUE;
+        $date = date("Y-m-d H:i:s");
+        $db = DBConnection::getConnection();
+        $sql = "UPDATE `m152`.`post` SET `commentaire`=:comment, `dateModification`=:date WHERE `idPost` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ":id" => $id,
+            ":date" => $date,
+            ":comment" => $comment
+        ]);
     }
     #endregion
     #region Delete
     public static function DeleteById_post($id)
     {
-        try {
-            $sql = "DELETE FROM `m152`.`post` WHERE `idPost` = :id";
-            $db = DBConnection::getConnection();
-            $data = array(":id" => $id);
-            $query = $db->prepare($sql);
-            $query->execute($data);
-        } catch (\Throwable $th) {
-            $th->getMessage();
-            return FALSE;
-        }
-        return TRUE;
+        $db = DBConnection::getConnection();
+        $sql = "DELETE FROM `post` WHERE `post`.`idPost` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ':id' => $id,
+        ]);
     }
     #endregion
 }

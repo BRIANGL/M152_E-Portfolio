@@ -28,6 +28,15 @@ if (isset($page)) {
         case 'post':
             require("./pages/post.php");
             break;
+        case 'delete':
+            require("./pages/delete.php");
+            break;
+        case 'edit':
+            require("./pages/edit.php");
+            break;
+        case 'uploadEdit':
+            require("./pages/uploadEdit.php");
+            break;
     }
 } else {
     require("./pages/index.php");

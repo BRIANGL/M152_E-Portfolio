@@ -5,6 +5,7 @@ namespace M152\sql;
 require_once 'dbInfos.php';
 
 
+session_start();
 
 class DBConnection
 {

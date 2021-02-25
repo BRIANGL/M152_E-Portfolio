@@ -13,6 +13,12 @@ use M152\sql\mediaDAO;
 use M152\sql\postDAO;
 use M152\sql\DBConnection;
 
+if (!isset($_GET['id'])) {
+    header('location: index.php?page=homepage');
+    exit();
+}
+
+$idPost = $_GET['id'];
 $btn = filter_input(INPUT_POST, 'action');
 $comment = filter_input(INPUT_POST, 'msg', FILTER_SANITIZE_STRING);
 $name = "";
@@ -24,34 +30,43 @@ $size_total = 0;
 $error = "";
 $type = '';
 $extension = '';
-$nb_files = count($_FILES['media']['name']);
-$MAX_FILE_SIZE = 3145728;    // 3MB in bytes
-$MAX_POST_SIZE = 73400320;  // 70MB in bytes
-$actualType = "";
+$nb_files = 0;
 
-$extensions = array(
-    "image" => array('.png', '.gif', '.jpg', '.jpeg'),
-    "video" => array('.mp4', '.webm'),
-    "audio" => array('.mp3', 'wav', 'ogg')
-);
-// available types of file
-$types = array('image', 'video', 'audio');
+if (!empty($_FILES['media'])) {
+    $nb_files = count($_FILES['media']['name']);
+    $MAX_FILE_SIZE = 3145728;    // 3MB in bytes
+    $MAX_POST_SIZE = 73400320;  // 70MB in bytes
+    $actualType = "";
 
+    $extensions = array(
+        "image" => array('.png', '.gif', '.jpg', '.jpeg'),
+        "video" => array('.mp4', '.webm'),
+        "audio" => array('.mp3', 'wav', 'ogg')
+    );
+    // available types of file
+    $types = array('image', 'video', 'audio');
+}
 // si on souhaite envoyer quelque chose...
 if ($btn == 'send') {
-    DBConnection::startTransaction();
-    $id = postDAO::add_post($comment);
-
-    foreach ($_FILES['media']['size'] as $key => $value) {
-        if ($value > $MAX_FILE_SIZE) {
-            $error = 'File too heavy.';
+    if (!empty($comment)) {
+        DBConnection::startTransaction();
+        try {
+            $id = postDAO::updateById_post($idPost, $comment);
+            DBConnection::commit();
+        } catch (\Throwable $th) {
             DBConnection::rollback();
-        } else {
-            $size_total += $value;
         }
     }
-
-    if (isset($_FILES['media'])) {
+    if ($_FILES['media']['name'][0] != "") {
+        DBConnection::startTransaction();
+        foreach ($_FILES['media']['size'] as $key => $value) {
+            if ($value > $MAX_FILE_SIZE) {
+                $error = 'File too heavy.';
+                DBConnection::rollback();
+            } else {
+                $size_total += $value;
+            }
+        }
         for ($i = 0; $i < $nb_files; $i++) {
             $errorimg = $_FILES['media']["error"][$i];
             if ($error == 'File too heavy.' || $size_total > $MAX_POST_SIZE) {
@@ -78,7 +93,7 @@ if ($btn == 'send') {
                             $lienimg = $default_dir . $type . "/" . $name;
                         }
                         try {
-                            mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
+                            mediaDAO::addmedia($name, $type, $extension, $lienimg, $idPost);
                             DBConnection::commit();
                         } catch (\Throwable $th) {
                             $error = $th;
@@ -96,7 +111,7 @@ if ($btn == 'send') {
 // Display
 
 if (empty($error)) {
-    $msg = '<div class="alert alert-success" role="alert">Upload effectué avec succès!</div>';
+    $msg = '<div class="alert alert-success" role="alert">Modification effectué avec succès!</div>';
 } else {
     $msg = '<div class="alert alert-danger" role="alert">' . $error . '</div>';
 }
