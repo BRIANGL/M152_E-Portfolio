@@ -47,39 +47,40 @@ require_once("./controllers/edit_controller.php");
 
                                 <!-- main col right -->
                                 <div class="col-sm-7">
-                                    <?php // @todo : add the function for displaying posts
-                                    //echo(display());
-                                    echo (displayPost($id));
-                                    ?>
+                                    <div id="loading"></div>
+                                    <div id="Error"></div>
+                                    <div id="userContent"><?php
+                                                            echo (displayPost($id));
+                                                            ?></div>
                                 </div>
                             </div>
                             <!--/row-->
 
                             <div class="well">
-                        <div class="col-sm-7">
+                                <div class="col-sm-7">
 
-                        </div>
-                        <form method="post" class="form-horizontal" role="form" action="./index.php?page=uploadEdit&id=<?= $id ?>" enctype="multipart/form-data">
-                            <h4>What's New</h4>
-                            <div class="form-group" style="padding:14px;">
-                                <textarea name="msg" class="form-control" placeholder="Change the text..."></textarea>
-                            </div>
-                            <button name="action" class="btn btn-primary pull-right" type="submit" value="send">Publish</button>
-
-                            <ul class="list-inline">
-                                <!-- Image tag -->
-                                <li>
-                                    <input type="file" files name="media[]" multiple accept=".png, .gif, .jpg, .jpeg, .mp4, .webm, .mp3, .wav, .ogg">(.gif,.png,.jpeg,.jpg,.mp4,.webm,.mp3,.wav,.ogg only)
-                                </li>
-                                <li>
-                                    <div class="preview">
-                                        <p>No files currently selected for upload
-                                        <p>
+                                </div>
+                                <form method="post" class="form-horizontal" role="form" action="./index.php?page=uploadEdit&id=<?= $id ?>" enctype="multipart/form-data">
+                                    <h4>What's New</h4>
+                                    <div class="form-group" style="padding:14px;">
+                                        <textarea name="msg" class="form-control" placeholder="Change the text..."></textarea>
                                     </div>
-                                </li>
-                            </ul>
-                        </form>
-                    </div>
+                                    <button name="action" class="btn btn-primary pull-right" type="submit" value="send">Publish</button>
+
+                                    <ul class="list-inline">
+                                        <!-- Image tag -->
+                                        <li>
+                                            <input type="file" files name="media[]" multiple accept=".png, .gif, .jpg, .jpeg, .mp4, .webm, .mp3, .wav, .ogg">(.gif,.png,.jpeg,.jpg,.mp4,.webm,.mp3,.wav,.ogg only)
+                                        </li>
+                                        <li>
+                                            <div class="preview">
+                                                <p>No files currently selected for upload
+                                                <p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
 
 
                         </div><!-- /col-9 -->
@@ -87,7 +88,7 @@ require_once("./controllers/edit_controller.php");
 
 
 
-                    
+
                 </div>
             </div>
 
@@ -121,90 +122,26 @@ require_once("./controllers/edit_controller.php");
             </div>
             <!-- Code pour le Javascript --->
             <script type="text/javascript">
-                // modal
-                $(document).ready(function() {
-                    $('[data-toggle=offcanvas]').click(function() {
-                        $(this).toggleClass('visible-xs text-center');
-                        $(this).find('i').toggleClass('glyphicon-chevron-right glyphicon-chevron-left');
-                        $('.row-offcanvas').toggleClass('active');
-                        $('#lg-menu').toggleClass('hidden-xs').toggleClass('visible-xs');
-                        $('#xs-menu').toggleClass('visible-xs').toggleClass('hidden-xs');
-                        $('#btnShow').toggle();
-                    });
-                });
-
-                var input = document.querySelector('input');
-                var preview = document.querySelector('.preview');
-
-                var fileTypes = [
-                    'image/jpeg',
-                    'image/pjpeg',
-                    'image/png'
-                ];
-
-
-                // Input type file
-
-                function validFileType(file) {
-                    for (var i = 0; i < fileTypes.length; i++) {
-                        if (file.type === fileTypes[i]) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-
-                function returnFileSize(number) {
-                    if (number < 1024) {
-                        return number + 'bytes';
-                    } else if (number >= 1024 && number < 1048576) {
-                        return (number / 1024).toFixed(1) + 'KB';
-                    } else if (number >= 1048576) {
-                        return (number / 1048576).toFixed(1) + 'MB';
-                    }
-                }
-
-                function updateImageDisplay() {
-                    while (preview.firstChild) {
-                        preview.removeChild(preview.firstChild);
-                    }
-                    var currentFiles = input.files;
-                    if (currentFiles.length === 0) {
-                        var para = document.createElement('p');
-                        para.textContent = 'No files selected for upload';
-                        preview.appendChlild(para);
+                function deleteJS(idToDelete) {
+                    var loadingDiv = document.getElementById("loading");
+                    var userContentDiv = document.getElementById("userContent");
+                    var errorDiv = document.getElementById("Error");
+                    var idPoste = document.getElementById("idPoste").value;
+                    
+                    if (idToDelete == null) {
+                        errorDiv.innerHTML = "Error";
+                        return;
                     } else {
-                        var list = document.createElement('ol');
-                        preview.appendChild(list);
-                        for (let i = 0; i < array.length; i++) {
-                            var item = document.createElement('li');
-                            var para = document.createElement('p');
-                            if (validFileType(currentFiles[i])) {
-                                para.textContent = 'File name' + currentFiles[i].name + ', file size ' + returnFileSize(currentFiles[i].size) + '.';
-                                var image = document.createElement('img');
-                                image.src = window.URL.createObjectURL(currentFiles[i].name + ': Not a valid file type. Update your selection.');
-                                item.appendChild(image);
-                                item.appendChild(para);
-                            } else {
-                                para.textContent = 'File name ' + currentFiles[i].name + ': Not a valid file type. Update your selection.';
-                                item.appendChild(para);
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                userContentDiv.innerHTML = this.responseText;
                             }
-                            item.appendChild(item);
-                        }
+                        };
+                        xmlhttp.open("GET", "index.php?page=ajax&idImg=" + idToDelete + "&IdPoste=" + idPoste, true);
+                        xmlhttp.send();
                     }
                 }
-                input.addEventListener('change', updateImageDisplay);
-
-                $(document).ready(function() {
-                    $('[data-toggle=offcanvas]').click(function() {
-                        $(this).toggleClass('visible-xs text-center');
-                        $(this).find('i').toggleClass('glyphicon-chevron-right glyphicon-chevron-left');
-                        $('.row-offcanvas').toggleClass('active');
-                        $('#lg-menu').toggleClass('hidden-xs').toggleClass('visible-xs');
-                        $('#xs-menu').toggleClass('visible-xs').toggleClass('hidden-xs');
-                        $('#btnShow').toggle();
-                    });
-                });
             </script>
         </div>
     </div>

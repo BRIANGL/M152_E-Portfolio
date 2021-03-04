@@ -37,6 +37,9 @@ if (isset($page)) {
         case 'uploadEdit':
             require("./pages/uploadEdit.php");
             break;
+        case 'ajax':
+            require("./pages/ajax.php");
+            break;
     }
 } else {
     require("./pages/index.php");

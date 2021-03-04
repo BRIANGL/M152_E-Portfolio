@@ -106,20 +106,15 @@ class MediaDAO
 
     public static function read_media_by_id($id)
     {
-        try {
-            $sql = "SELECT `idMedia`, `typeMedia`, `nameMedia`, `dateCreation`, `Dttm_Modification_Media` FROM `media` WHERE `idMedia` = :id";
-            $data = array(':id' => $id);
-            $db =  DBConnection::getConnection();
-            $db->beginTransaction();
-            $query = $db->prepare($sql);
-            $query->execute($data);
-            $db->commit();
-            return $query->fetch();
-        } catch (\Throwable $th) {
-            $th->getMessage();
-            $db->rollBack();
-            return FALSE;
-        }
+        $sql = "SELECT * FROM `media` WHERE `idMedia` = :id";
+
+        $query = DBConnection::getConnection()->prepare($sql);
+
+        $query->execute([
+            ':id' => $id,
+        ]);
+        return $query->fetchall();
+        
     }
 
     public static function readMediaByIdPost($idPost)
