@@ -13,21 +13,21 @@ use M152\sql\mediaDAO;
 use M152\sql\postDAO;
 use M152\sql\DBConnection;
 
-
+//on récupère l'id du poste a modifier et si il est vide on r'envoie l'utilisateur a la homepage
 if (empty($_GET['id'])) {
     header('location: index.php?page=homepage');
     exit();
 }
 
+//on met l'id dans une variable et on check si il y a eu une demande de suppression d'image en post
 $id = $_GET['id'];
 if (isset($_POST['delete'])) {
     $idMediaToDelete = $_POST['delete'];
 }
 
 
-
+//si il y a eu une demande de suppression on démarre une transaction et on supprime les images
 if (!empty($idMediaToDelete)) {
-    //var_dump($idMediaToDelete);
     DBConnection::startTransaction();
     try {
         foreach ($idMediaToDelete as $key => $value) {
@@ -35,9 +35,10 @@ if (!empty($idMediaToDelete)) {
             mediaDAO::del_mediaByIdMedia($value);
             unlink($linkMediaToDelete);
         }
-        DBConnection::commit();
+        postDAO::updateDateModificationById_post($id);
+        DBConnection::commit();//si tout se passe bien, on commit les changements a la base de donnée
     } catch (\Throwable $th) {
-        DBConnection::rollback();
+        DBConnection::rollback();//si il y a une erreur, on annule les changements
         echo "Rollback";
     }
 
@@ -46,7 +47,12 @@ if (!empty($idMediaToDelete)) {
 
 
 
-
+/**
+ * displayPost
+ *
+ * @param [int] $idPost
+ * @return string tout l'html du poste
+ */
 function displayPost($idPost)
 {
     $display = '';

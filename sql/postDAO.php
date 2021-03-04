@@ -75,6 +75,18 @@ class postDAO
             ":comment" => $comment
         ]);
     }
+
+    public static function updateDateModificationById_post($id)
+    {
+        $date = date("Y-m-d H:i:s");
+        $db = DBConnection::getConnection();
+        $sql = "UPDATE `m152`.`post` SET `dateModification`=:date WHERE `idPost` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ":id" => $id,
+            ":date" => $date,
+        ]);
+    }
     #endregion
     #region Delete
     public static function DeleteById_post($id)

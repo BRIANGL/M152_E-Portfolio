@@ -28,17 +28,38 @@ require_once("./controllers/edit_controller.php");
         <div class="box">
             <div class="row row-offcanvas row-offcanvas-left">
 
+
                 <!-- main right col -->
                 <div class="column col-sm-10 col-xs-11" id="main">
                     <?php require_once('assets/php/nav.php'); ?>
-                    <div class="well">
+
+
+                    <div class="padding">
+                        <div class="full col-sm-9">
+
+                            <!-- content -->
+                            <div class="row">
+
+                                <!-- main col left -->
+                                <div class="col-sm-5">
+
+                                </div>
+
+                                <!-- main col right -->
+                                <div class="col-sm-7">
+                                    <?php // @todo : add the function for displaying posts
+                                    //echo(display());
+                                    echo (displayPost($id));
+                                    ?>
+                                </div>
+                            </div>
+                            <!--/row-->
+
+                            <div class="well">
                         <div class="col-sm-7">
-                            <?php // @todo : add the function for displaying posts
-                            //echo(display());
-                            echo (displayPost($id));
-                            ?>
+
                         </div>
-                        <form method="post" class="form-horizontal" role="form" action="./index.php?page=uploadEdit&id=<?=$id?>" enctype="multipart/form-data">
+                        <form method="post" class="form-horizontal" role="form" action="./index.php?page=uploadEdit&id=<?= $id ?>" enctype="multipart/form-data">
                             <h4>What's New</h4>
                             <div class="form-group" style="padding:14px;">
                                 <textarea name="msg" class="form-control" placeholder="Change the text..."></textarea>
@@ -59,6 +80,14 @@ require_once("./controllers/edit_controller.php");
                             </ul>
                         </form>
                     </div>
+
+
+                        </div><!-- /col-9 -->
+                    </div><!-- /padding -->
+
+
+
+                    
                 </div>
             </div>
 

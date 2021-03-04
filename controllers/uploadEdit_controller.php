@@ -94,6 +94,7 @@ if ($btn == 'send') {
                         }
                         try {
                             mediaDAO::addmedia($name, $type, $extension, $lienimg, $idPost);
+                            postDAO::updateDateModificationById_post($idPost);
                             DBConnection::commit();
                         } catch (\Throwable $th) {
                             $error = $th;
