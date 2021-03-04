@@ -74,7 +74,7 @@ require_once("./controllers/edit_controller.php");
                                         </li>
                                         <li>
                                             <div class="preview">
-                                                <p>No files currently selected for upload
+                                                <p>
                                                 <p>
                                             </div>
                                         </li>
@@ -132,9 +132,11 @@ require_once("./controllers/edit_controller.php");
                         errorDiv.innerHTML = "Error";
                         return;
                     } else {
+                        loadingDiv.innerHTML = "<img src='./assets/img/loading.gif' alt='loading'>";
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.onreadystatechange = function() {
                             if (this.readyState == 4 && this.status == 200) {
+                                loadingDiv.innerHTML = ""
                                 userContentDiv.innerHTML = this.responseText;
                             }
                         };
