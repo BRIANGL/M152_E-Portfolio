@@ -28,6 +28,9 @@ $nb_files = count($_FILES['media']['name']);
 $MAX_FILE_SIZE = 3145728;    // 3MB in bytes
 $MAX_POST_SIZE = 73400320;  // 70MB in bytes
 $actualType = "";
+$percent = 0.5;
+$max_height = 300;
+$max_width = 600;
 
 $extensions = array(
     "image" => array('.png', '.gif', '.jpg', '.jpeg'),
@@ -79,10 +82,93 @@ if ($btn == 'send' && $comment != null) {
                                 $tmp_name = $_FILES['media']["name"][$i];
                                 $name = explode(".", $tmp_name);
                                 $name = $name[0] . uniqid() . "." . $name[1];
+
                                 if (move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name)) {
                                     //ajout du nom du fichier dans la bd
                                     mediaDAO::changePath($name, $tmp_name[$i]);
                                     $lienimg = $default_dir . $type . "/" . $name;
+
+
+
+                                    //suppression de la redimension du format gif du a un problème d'animation
+                                    /*if ($extension == "gif") {
+
+                                        list($orig_width, $orig_height) = getimagesize($lienimg);
+                                        $width = $orig_width;
+                                        $height = $orig_height;
+
+                                        //plus haut
+                                        if ($height > $max_height) {
+                                            $width = ($max_height / $height) * $width;
+                                            $height = $max_height;
+                                        }
+
+                                        //plus large
+                                        if ($width > $max_width) {
+                                            $height = ($max_width / $width) * $height;
+                                            $width = $max_width;
+                                        }
+
+                                        $thumb = imagecreatetruecolor($width, $height);
+                                        $source = imagecreatefromgif($lienimg);
+                                        // Redimensionnement
+                                        if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
+                                            imagegif($thumb, $lienimg);
+                                        }
+                                    }*/
+
+                                    //supprime la transparence de l'image
+                                    if ($extension == "png") {
+
+                                        list($orig_width, $orig_height) = getimagesize($lienimg);
+                                        $width = $orig_width;
+                                        $height = $orig_height;
+
+                                        //plus haut
+                                        if ($height > $max_height) {
+                                            $width = ($max_height / $height) * $width;
+                                            $height = $max_height;
+                                        }
+
+                                        //plus large
+                                        if ($width > $max_width) {
+                                            $height = ($max_width / $width) * $height;
+                                            $width = $max_width;
+                                        }
+
+                                        $thumb = imagecreatetruecolor($width, $height);
+                                        $source = imagecreatefrompng($lienimg);
+                                        // Redimensionnement
+                                        if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
+                                            imagepng($thumb, $lienimg);
+                                        }
+                                    }
+
+                                    if ($extension == "jpeg") {
+
+                                        list($orig_width, $orig_height) = getimagesize($lienimg);
+                                        $width = $orig_width;
+                                        $height = $orig_height;
+
+                                        //plus haut
+                                        if ($height > $max_height) {
+                                            $width = ($max_height / $height) * $width;
+                                            $height = $max_height;
+                                        }
+
+                                        //plus large
+                                        if ($width > $max_width) {
+                                            $height = ($max_width / $width) * $height;
+                                            $width = $max_width;
+                                        }
+
+                                        $thumb = imagecreatetruecolor($width, $height);
+                                        $source = imagecreatefromjpeg($lienimg);
+                                        // Redimensionnement
+                                        if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
+                                            imagejpeg($thumb, $lienimg);
+                                        }
+                                    }
                                 } else {
                                     DBConnection::rollback();
                                 }
