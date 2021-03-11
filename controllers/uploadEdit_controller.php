@@ -87,10 +87,14 @@ if ($btn == 'send') {
                             $tmp_name = $_FILES['media']["name"][$i];
                             $name = explode(".", $tmp_name);
                             $name = $name[0] . uniqid() . "." . $name[1];
-                            move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name);
+                            
+							if(move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name)){
                             //ajout du nom du fichier dans la bd
                             mediaDAO::changePath($name, $tmp_name[$i]);
                             $lienimg = $default_dir . $type . "/" . $name;
+							}else{
+								DBConnection::rollback();
+							}
                         }
                         try {
                             mediaDAO::addmedia($name, $type, $extension, $lienimg, $idPost);
