@@ -42,11 +42,11 @@ if ($btn == 'send' && $comment != null) {
     DBConnection::startTransaction();
     try {
         $id = postDAO::add_post($comment);
-    DBConnection::commit();
+        DBConnection::commit();
     } catch (\Throwable $th) {
         DBConnection::rollback();
     }
-    
+
     if ($_FILES['media']['name'][0] != "") {
         DBConnection::startTransaction();
         foreach ($_FILES['media']['size'] as $key => $value) {
@@ -79,10 +79,13 @@ if ($btn == 'send' && $comment != null) {
                                 $tmp_name = $_FILES['media']["name"][$i];
                                 $name = explode(".", $tmp_name);
                                 $name = $name[0] . uniqid() . "." . $name[1];
-                                move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name);
-                                //ajout du nom du fichier dans la bd
-                                mediaDAO::changePath($name, $tmp_name[$i]);
-                                $lienimg = $default_dir . $type . "/" . $name;
+                                if (move_uploaded_file($_FILES['media']["tmp_name"][$i], $default_dir . $type . "/" . $name)) {
+                                    //ajout du nom du fichier dans la bd
+                                    mediaDAO::changePath($name, $tmp_name[$i]);
+                                    $lienimg = $default_dir . $type . "/" . $name;
+                                } else {
+                                    DBConnection::rollback();
+                                }
                             }
                             try {
                                 mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
@@ -99,8 +102,8 @@ if ($btn == 'send' && $comment != null) {
             }
         }
     }
-}else {
-    $error = "un message est nécéssaire"; 
+} else {
+    $error = "un message est nécéssaire";
 }
 
 // Display
