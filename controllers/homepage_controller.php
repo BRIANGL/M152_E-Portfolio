@@ -129,20 +129,20 @@ function displayPost()
                                     if ($value_ == $value) {
                                         if (in_array($tmp_ext, $extensions['image'])) {
                                             # image
-                                            $display .= "<div class='panel-thumbnail'><img name='" . $tmp_name . "' src='" . $tmp_path . "' class='img-responsive'></div>";
+                                            $display .= "<div class='panel-thumbnail'><a href='" . $tmp_path . "'><img name='" . $tmp_name . "' src='" . $tmp_path . "' class='img-responsive' onclick='addView(" . $num_["idMedia"] . ")'></a></div>";
                                         } else if (in_array($tmp_ext, $extensions['video'])) {
                                             # video
-                                            $display .= '<video preload="metadata" width="100%" controls autoplay loop>
+                                            $display .= '<a href="' . $tmp_path . '"><video preload="metadata" width="100%" controls autoplay loop onclick="addView(' . $num_["idMedia"] . ') onclick="addView(' . $num_["idMedia"] . ')">
                                                 <source src="./' . $tmp_path . '" type="video/mp4">
                                                 Your browser does not support the video tag.
-                                                </video>
+                                                </video></a>
                                             </li><p><strong>Note: </strong>The video tag is not supported in Internet Explorer 8 and earlier versions.</p></li>';
                                         } else if (in_array($tmp_ext, $extensions['audio'])) {
                                             # audio
-                                            $display .= '<audio controls preload="metadata">
+                                            $display .= '<a href="' . $tmp_path . '"><audio controls preload="metadata" onplay="addView(' . $num_["idMedia"] . ')" onclick="addView(' . $num_["idMedia"] . ')">
                                             <source src="./' . $tmp_path . '" type="audio/' . $tmp_ext . '">
                                             Your browser does not support the audio element.
-                                            </audio></li>';
+                                            </audio></a></li>';
                                         }
                                     }
                                     break;

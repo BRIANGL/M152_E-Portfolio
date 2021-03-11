@@ -146,6 +146,20 @@ if ($btn == 'send' && $comment != null) {
 
                                     if ($extension == "jpeg") {
 
+                                        // ---METADATA---
+                                        /*echo "test1.jpg:<br />\n";
+                                        $exif = exif_read_data($lienimg, 'IFD0');
+                                        echo $exif===false ? "Aucun en-tête de donnés n'a été trouvé.<br />\n" : "L'image contient des en-têtes<br />\n";
+                                        
+                                        $exif = exif_read_data($lienimg, 0, true);
+                                        echo "test2.jpg:<br />\n";
+                                        foreach ($exif as $key => $section) {
+                                            foreach ($section as $name => $val) {
+                                                echo "$key.$name: $val<br />\n";
+                                            }
+                                        }*/
+
+
                                         list($orig_width, $orig_height) = getimagesize($lienimg);
                                         $width = $orig_width;
                                         $height = $orig_height;
@@ -168,6 +182,9 @@ if ($btn == 'send' && $comment != null) {
                                         if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
                                             imagejpeg($thumb, $lienimg);
                                         }
+
+                                        
+
                                     }
                                 } else {
                                     DBConnection::rollback();

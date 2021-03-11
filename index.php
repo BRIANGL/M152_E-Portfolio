@@ -40,6 +40,9 @@ if (isset($page)) {
         case 'ajax':
             require("./pages/ajax.php");
             break;
+        case 'addView':
+            require("./pages/addView.php");
+            break;
     }
 } else {
     require("./pages/index.php");

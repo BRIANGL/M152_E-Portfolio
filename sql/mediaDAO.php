@@ -66,6 +66,18 @@ class MediaDAO
         ));
     }
 
+    public static function AddView($id, $nbView)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "UPDATE `media` SET `nbCliques` = :nbview WHERE `media`.`idMedia` = :id";
+
+        $q = $db->prepare($sql);
+        $q->execute(array(
+            ':id' => $id,
+            ':nbview' => $nbView
+        ));
+    }
+
 
     public static function addmedia($nomMedia, $type, $ext, $path, $id)
     {
@@ -235,6 +247,18 @@ class MediaDAO
             ':id' => $idPost,
         ]);
         $result = $q->fetchAll();
+        return $result;
+    }
+
+    public static function GetView($idMedia)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "SELECT `nbCliques` FROM `media` WHERE `media`.`idMedia` = :id";
+        $q = $db->prepare($sql);
+        $q->execute([
+            ':id' => $idMedia,
+        ]);
+        $result = $q->fetch();
         return $result;
     }
     #endregion
