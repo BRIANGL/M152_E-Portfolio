@@ -88,8 +88,6 @@ if ($btn == 'send' && $comment != null) {
                                     mediaDAO::changePath($name, $tmp_name[$i]);
                                     $lienimg = $default_dir . $type . "/" . $name;
 
-
-
                                     //suppression de la redimension du format gif du a un problème d'animation
                                     /*if ($extension == "gif") {
 
@@ -120,6 +118,7 @@ if ($btn == 'send' && $comment != null) {
                                     //supprime la transparence de l'image
                                     if ($extension == "png") {
 
+
                                         list($orig_width, $orig_height) = getimagesize($lienimg);
                                         $width = $orig_width;
                                         $height = $orig_height;
@@ -146,20 +145,6 @@ if ($btn == 'send' && $comment != null) {
 
                                     if ($extension == "jpeg") {
 
-                                        // ---METADATA---
-                                        /*echo "test1.jpg:<br />\n";
-                                        $exif = exif_read_data($lienimg, 'IFD0');
-                                        echo $exif===false ? "Aucun en-tête de donnés n'a été trouvé.<br />\n" : "L'image contient des en-têtes<br />\n";
-                                        
-                                        $exif = exif_read_data($lienimg, 0, true);
-                                        echo "test2.jpg:<br />\n";
-                                        foreach ($exif as $key => $section) {
-                                            foreach ($section as $name => $val) {
-                                                echo "$key.$name: $val<br />\n";
-                                            }
-                                        }*/
-
-
                                         list($orig_width, $orig_height) = getimagesize($lienimg);
                                         $width = $orig_width;
                                         $height = $orig_height;
@@ -182,9 +167,6 @@ if ($btn == 'send' && $comment != null) {
                                         if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
                                             imagejpeg($thumb, $lienimg);
                                         }
-
-                                        
-
                                     }
                                 } else {
                                     DBConnection::rollback();
@@ -192,6 +174,19 @@ if ($btn == 'send' && $comment != null) {
                             }
                             try {
                                 mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
+
+                                $idMediaActuel = mediaDAO::read_media_by_Path($lienimg)[0]['idMedia'];
+                                var_dump(mediaDAO::read_media_by_Path($lienimg));
+                                $metadataActuel = "";
+
+                                $exif = exif_read_data($lienimg, 0, true);
+                                foreach ($exif as $key => $section) {
+                                    foreach ($section as $name => $val) {
+                                        $metadataActuel = $key . $name . ":" . $val;
+                                        mediaDAO::AddMetadata($idMediaActuel, $metadataActuel);
+                                    }
+                                }
+
                                 DBConnection::commit();
                             } catch (\Throwable $th) {
                                 $error = $th;

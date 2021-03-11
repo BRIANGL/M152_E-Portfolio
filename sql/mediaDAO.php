@@ -78,6 +78,19 @@ class MediaDAO
         ));
     }
 
+    public static function AddMetadata($id, $metadata)
+    {
+        $db = DBConnection::getConnection();
+        $sql = "INSERT INTO `metadata`(`idMedia`,`metadata`)
+        VALUES (:id, :metadata)";
+
+        $q = $db->prepare($sql);
+        $q->execute(array(
+            ':id' => $id,
+            ':metadata' => $metadata
+        ));
+    }
+
 
     public static function addmedia($nomMedia, $type, $ext, $path, $id)
     {
@@ -124,6 +137,19 @@ class MediaDAO
 
         $query->execute([
             ':id' => $id,
+        ]);
+        return $query->fetchall();
+        
+    }
+
+    public static function read_media_by_Path($path)
+    {
+        $sql = "SELECT * FROM `media` WHERE `pathImg` = :mypath";
+
+        $query = DBConnection::getConnection()->prepare($sql);
+
+        $query->execute([
+            ':mypath' => $path,
         ]);
         return $query->fetchall();
         
