@@ -2,7 +2,6 @@
 /*
 FICHIER CONTENANT TOUTES LES MÉTHODES EN RAPPORT AVEC LA TABLE "Media"
 */
-
 namespace M152\sql;
 
 use M152\sql\DBConnection;
@@ -10,8 +9,6 @@ use M152\sql\DBConnection;
 // resources
 require_once("dbConnection.php");
 require_once("postDAO.php");
-
-
 class MediaDAO
 {
     #region Create
@@ -92,6 +89,16 @@ class MediaDAO
     }
 
 
+    /**
+     * Undocumented function
+     *
+     * @param [string] $nomMedia
+     * @param [type] $type
+     * @param [type] $ext
+     * @param [type] $path
+     * @param [type] $id
+     * @return void
+     */
     public static function addmedia($nomMedia, $type, $ext, $path, $id)
     {
         $date = date("Y-m-d H:i:s");

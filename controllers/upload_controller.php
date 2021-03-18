@@ -167,6 +167,17 @@ if ($btn == 'send' && $comment != null) {
                                         if (imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
                                             imagejpeg($thumb, $lienimg);
                                         }
+
+
+                                        $exif = exif_read_data($lienimg, 0, true);
+                                        $incoming_file = $lienimg;
+                                        $img = new Imagick(realpath($lienimg));
+                                        $profiles = $img->getImageProfiles("icc", true);
+                                        $img->stripImage();
+
+                                        if (!empty($profiles)) {
+                                            $img->profileImage("icc", $profiles['icc']);
+                                        }
                                     }
                                 } else {
                                     DBConnection::rollback();
@@ -176,10 +187,9 @@ if ($btn == 'send' && $comment != null) {
                                 mediaDAO::addmedia($name, $type, $extension, $lienimg, $id);
 
                                 $idMediaActuel = mediaDAO::read_media_by_Path($lienimg)[0]['idMedia'];
-                                var_dump(mediaDAO::read_media_by_Path($lienimg));
                                 $metadataActuel = "";
 
-                                $exif = exif_read_data($lienimg, 0, true);
+                                
                                 foreach ($exif as $key => $section) {
                                     foreach ($section as $name => $val) {
                                         $metadataActuel = $key . $name . ":" . $val;
