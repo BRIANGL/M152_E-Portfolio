@@ -3,7 +3,7 @@
  *  Author  :   Golay Brian
  *  Class   :   P4B
  *  Date    :   2021/01/28
- *  Desc.   :   Edit post page
+ *  Desc.   :   Ajax called page
 */
 require_once("./sql/postDAO.php");
 require_once("./sql/mediaDAO.php");
